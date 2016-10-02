@@ -2,9 +2,13 @@ package com.naxin.test;
 
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.rpc.ServiceException;
 import javax.xml.rpc.Stub;
+
+import weblogic.wsee.security.unt.ClientUNTCredentialProvider;
 
 import com.comcast.billing.payment.client.PaymentServicePort;
 import com.comcast.billing.payment.client.PaymentService_Impl;
@@ -22,9 +26,13 @@ public class App {
 			
 			stub._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "https://esp-int.cable.comcast.com/PaymentService/16.13");
 			
-			stub._setProperty(Stub.USERNAME_PROPERTY, "yourUserName");
-    		stub._setProperty(Stub.PASSWORD_PROPERTY, "yourPassword");
-    		
+			String username="yourusername";
+			String password = "yourpassword";
+//			stub._setProperty(Stub.USERNAME_PROPERTY, "yourUserName");
+//    		stub._setProperty(Stub.PASSWORD_PROPERTY, "yourPassword");
+       		List<ClientUNTCredentialProvider> providers = new ArrayList<ClientUNTCredentialProvider>();
+    		providers.add(new ClientUNTCredentialProvider(username.getBytes(), password.getBytes()));
+    		stub._setProperty("weblogic.wsee.security.wss.CredentialProviderList", providers);        		    		
     		PaymentServicePort port = (PaymentServicePort) stub;
     		
     		SubmitPaymentRequest request = new SubmitPaymentRequest();
