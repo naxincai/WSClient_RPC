@@ -3,10 +3,13 @@ package com.naxin.test;
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import javax.xml.namespace.QName;
 import javax.xml.rpc.ServiceException;
 import javax.xml.rpc.Stub;
+import javax.xml.rpc.handler.HandlerInfo;
 
 import weblogic.wsee.security.unt.ClientUNTCredentialProvider;
 
@@ -34,6 +37,22 @@ public class App {
     		providers.add(new ClientUNTCredentialProvider(username.getBytes(), password.getBytes()));
     		stub._setProperty("weblogic.wsee.security.wss.CredentialProviderList", providers);        		    		
     		PaymentServicePort port = (PaymentServicePort) stub;
+    		
+    		//Register handler
+            HashMap<String, Object> hMap = new HashMap<String, Object>();
+   			hMap.put("username", username);
+			hMap.put("password", password);
+			hMap.put("wsse",Boolean.valueOf(true));
+			hMap.put("addNonce", Boolean.valueOf(false));
+			hMap.put("usePasswordDigest", Boolean.valueOf(false));
+			hMap.put("addTimestamp", Boolean.valueOf(false));
+			hMap.put("endpoint", "https://esp-int.cable.comcast.com/PaymentService/16.13");
+			hMap.put("requestHeaderNamespace", "http://xml.comcast.com/types");
+			
+	        QName pn = new QName("http://xml.comcast.com/payment/services", "PaymentServicePort");
+
+    		jaxRpcService.getHandlerRegistry().getHandlerChain(pn).add(
+    				new HandlerInfo(SoapLoggingHandler.class, hMap, null));
     		
     		SubmitPaymentRequest request = new SubmitPaymentRequest();
     		request.setAmount(new BigDecimal("1000"));

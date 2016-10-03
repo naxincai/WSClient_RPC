@@ -14,8 +14,6 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 
-import com.comcast.core.framework.jaxrpc.ServiceContext;
-import com.comcast.core.framework.jaxrpc.ServiceContextHandler;
 
 public class SoapLoggingHandler extends GenericHandler {
 
